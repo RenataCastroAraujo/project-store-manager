@@ -8,7 +8,7 @@ const productService = {
   async getById(id) {
     const product = await productsModel.getById(id);
     return product;
-  }
+  },
 };
 
 module.exports = productService;
