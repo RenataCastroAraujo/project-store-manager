@@ -9,6 +9,11 @@ const productService = {
     const product = await productsModel.getById(id);
     return product;
   },
+  async addProduct(item) {
+    const product = await productsModel.addProduct(item);
+    return product;
+
+  }
 };
 
 module.exports = productService;

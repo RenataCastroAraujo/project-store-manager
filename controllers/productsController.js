@@ -14,6 +14,11 @@ const productController = {
     }
     res.status(200).json(product);
   },
+  async addProduct(req, res) {
+    const { name } = req.body;
+    const product = await productService.addProduct(name);
+    res.status(201).json(product);
+  }
 };
 
 module.exports = productController;
