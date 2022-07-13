@@ -17,10 +17,23 @@ const productsModel = {
     const result = { id: insertedItem.insertId, name: item.name };
     return result;
   },
+  async existsId(id) {
+    const sql = `
+      SELECT 1
+      FROM StoreManager.products
+      WHERE id = ?
+    `;
+    const [[item]] = await connection.query(sql, [id]);
+    return !!item;
+  },
   async listByArrayOfId(arrayOfId) {
     const sql = 'SELECT * FROM StoreManager.products WHERE id IN (?)';
     const [items] = await connection.query(sql, [arrayOfId]);
     return items;
+  },
+  async editProduct(id, changes) {
+    const sql = 'UPDATE products SET ? WHERE id=?';
+    await connection.query(sql, [changes, id]);
   },
 };
 

@@ -6,9 +6,9 @@ const NotFoundError = require('../errors/productNotFoundError');
 const productService = {
   validateBodyAdd: runSchema(Joi.object({
     name: Joi.string().required().min(5).messages({
-      'any.required': "\"name\" is required",
-      'string.min': "\"name\" length must be at least 5 characters long",
-    })
+      'any.required': '"name" is required',
+      'string.min': '"name" length must be at least 5 characters long',
+    }),
   })),
   
   async list() {
@@ -28,7 +28,7 @@ const productService = {
 
     if (!items.length) throw new NotFoundError('Product not found');
 
-    const objectKeys = items.map(item => Object.values(item)[0]);
+    const objectKeys = items.map((item) => Object.values(item)[0]);
 
     arrayOfId.forEach((productId) => {
       if (!objectKeys.includes(productId)) {
@@ -36,7 +36,14 @@ const productService = {
       }
     });
   },
-
+  async editProduct(id, changes) {
+    await productsModel.editProduct(id, changes);
+    return { id, ...changes };
+  },
+  async checkExists(id) {
+    const exists = await productsModel.existsId(id);
+    if (!exists) throw new NotFoundError('Product not found');
+  },
 };
 
 module.exports = productService;

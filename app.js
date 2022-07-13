@@ -14,18 +14,25 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.use((err, _req, res, _next) => {
+const typeErrors = {
+  UnprocessedEntityError: 422,
+  ProductNameNotExists: 400,
+  ProductLenghtError: 422,
+  ProductNotFoundError: 404,
+  ValidationError: 400,
+  NotFoundError: 404,
+};
+
+const filterErrors = (err, _req, res, _next) => {
   const { name, message } = err;
-  switch (name) {
-    case 'UnprocessedEntityError': res.status(422).json({ message }); break;
-    case 'ProductNameNotExists': res.status(400).json({ message }); break;
-    case 'ProductLenghtError': res.status(422).json({ message }); break;
-    case 'ProductNotFoundError': res.status(404).json({ message }); break;
-    case 'ValidationError': res.status(400).json({ message }); break;
-    case 'NotFoundError': res.status(404).json({ message }); break;
-    default: console.warn(err); res.sendStatus(500);
+  if (typeErrors[name]) {
+    res.status(typeErrors[name]).json({ message });
+  } else {
+    console.warn(err); res.sendStatus(500);
   }
-});
+};
+
+app.use(filterErrors);
 
 // não remova essa exportação, é para o avaliador funcionar
 // você pode registrar suas rotas normalmente, como o exemplo acima

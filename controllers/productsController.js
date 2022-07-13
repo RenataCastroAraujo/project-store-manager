@@ -19,6 +19,13 @@ const productController = {
     const product = await productService.addProduct(data);
     res.status(201).json(product);
   },
+  async editProduct(req, res) {
+    const data = await productService.validateBodyAdd(req.body);
+    const { id } = req.params;
+    await productService.checkExists(id);
+    const product = await productService.editProduct(id, data);
+    res.status(200).json(product);
+  },
 };
 
 module.exports = productController;
